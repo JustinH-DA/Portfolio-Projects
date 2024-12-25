@@ -1,33 +1,33 @@
 --select *
---From PortolioProject..['Covid Deaths]
+--From PortfolioProject..['Covid Deaths]
 --order by 3,4
 
 --select *
---From PortolioProject..['Covid Vaccs]
+--From PortfolioProject..['Covid Vaccs]
 --order by 3,4
 
 SELECT location, date, total_cases, new_cases, total_deaths, population
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 Order by 1,2
 
 --Looking at Total Cases vs Total Deaths
 
 SELECT location, date, total_cases,total_deaths, CAST(total_deaths AS FLOAT) / NULLIF(total_cases, 0)*100 AS DeathPercentage
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 WHERE location like '%states%'
 Order by 1,2
 
 --Looking at Total Cases vs Population 
 
 SELECT location, date, total_cases, (total_cases/population)*100 AS DeathPercentage
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 WHERE location like '%states%'
 Order by 1,2
 
 --Looking at countries with Highest Infection Rate compared to Populaton
 
 SELECT Location, Population, MAX(Total_cases) as HighestInfectionCount, MAX(total_cases/population)*100 as PercentPopulationInfected
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 WHERE location like '%states%'
 Group by location, population
 Order by PercentPopulationInfected 
@@ -35,7 +35,7 @@ Order by PercentPopulationInfected
 --Showing Countries with highest deathcount per population
 
 SELECT Location, MAX(cast(total_deaths as INT)) as TotalDeathCount
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 --WHERE location like '%states%'
 Group by location 
 Order by TotalDeathCount desc
@@ -46,7 +46,7 @@ Order by TotalDeathCount desc
 
 SELECT SUM(new_cases) as Total_cases, SUM(cast(new_deaths as int)) as total_deaths, 
 SUM(cast(new_deaths as INT))/SUM(new_cases)*100 as DeathPercentage
-From PortolioProject..['Covid Deaths]
+From PortfolioProject..['Covid Deaths]
 --WHERE location like '%states%'
 WHERE location is not null
 --Group by date
@@ -58,8 +58,8 @@ Order by 1,2
 Select dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(Cast(vac.new_vaccinations as float)) OVER (Partition by dea.location ORder by dea.location, dea.date)  as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
-From PortolioProject..['Covid Deaths] dea
-Join PortolioProject..['Covid Vaccs] vac
+From PortfolioProject..['Covid Deaths] dea
+Join PortfolioProject..['Covid Vaccs] vac
 	 on dea.location = vac.location
 	and dea.date = vac.date
  WHERE dea.location is not null
@@ -74,8 +74,8 @@ Join PortolioProject..['Covid Vaccs] vac
  Select dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(Cast(vac.new_vaccinations as float)) OVER (Partition by dea.location ORder by dea.location, dea.date)  as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
-From PortolioProject..['Covid Deaths] dea
-Join PortolioProject..['Covid Vaccs] vac
+From PortfolioProject..['Covid Deaths] dea
+Join PortfolioProject..['Covid Vaccs] vac
 	 on dea.location = vac.location
 	and dea.date = vac.date
  WHERE dea.location is not null
@@ -101,8 +101,8 @@ Insert Into #PercentPopulationVaccinated
 Select dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(Cast(vac.new_vaccinations as float)) OVER (Partition by dea.location ORder by dea.location, dea.date)  as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
-From PortolioProject..['Covid Deaths] dea
-Join PortolioProject..['Covid Vaccs] vac
+From PortfolioProject..['Covid Deaths] dea
+Join PortfolioProject..['Covid Vaccs] vac
 	 on dea.location = vac.location
 	and dea.date = vac.date
  WHERE dea.location is not null
@@ -119,8 +119,8 @@ Create View PercentPopulationVaccinated as
 Select dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(Cast(vac.new_vaccinations as float)) OVER (Partition by dea.location ORder by dea.location, dea.date)  as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100
-From PortolioProject..['Covid Deaths] dea
-Join PortolioProject..['Covid Vaccs] vac
+From PortfolioProject..['Covid Deaths] dea
+Join PortfolioProject..['Covid Vaccs] vac
 	 on dea.location = vac.location
 	and dea.date = vac.date
 WHERE dea.location is not null
